@@ -32,7 +32,7 @@ public class City extends LitePalSupport {
         return cityName;
     }
 
-    public int getCityCode() {
+    public int getCityCode(int id) {
         return cityCode;
     }
 
