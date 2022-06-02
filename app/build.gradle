@@ -27,11 +27,19 @@ android {
     }
 }
 
-dependencies {
 
+dependencies {
+    //implementation 'org.litepal.guolindev:core:3.2.3'//对数据库进行的操作
+    //implementation 'org.litepal.android:java:3.0.0'
+    implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.7'//进行网络请求
+    implementation 'com.google.code.gson:gson:2.9.0'//解析JSON数据
+    implementation 'com.github.bumptech.glide:glide:4.13.2'//加载和展示图片
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'org.litepal.guolindev:core:3.2.3'
+    implementation files('libs\\litepal-2.0.0.jar')
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
