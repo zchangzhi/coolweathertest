@@ -7,6 +7,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.StatusBarManager;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.coolweather.coolweathertest.gson.Forecast;
 import com.coolweather.coolweathertest.gson.Weather;
+import com.coolweather.coolweathertest.service.AutoUpdateService;
 import com.coolweather.coolweathertest.util.HttpUtil;
 import com.coolweather.coolweathertest.util.StatusBarUtil;
 import com.coolweather.coolweathertest.util.Utility;
@@ -220,5 +222,8 @@ public class WeatherActivity extends AppCompatActivity {
         carWashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
+        //每日更新
+        Intent intent=new Intent(this, AutoUpdateService.class);
+        startActivity(intent);
     }
 }
