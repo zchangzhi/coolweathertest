@@ -224,6 +224,6 @@ public class WeatherActivity extends AppCompatActivity {
         weatherLayout.setVisibility(View.VISIBLE);
         //每日更新
         Intent intent=new Intent(this, AutoUpdateService.class);
-        startActivity(intent);
+        startService(intent);
     }
 }
