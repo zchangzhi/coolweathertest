@@ -19,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.coolweather.coolweathertest.db.City;
 import com.coolweather.coolweathertest.db.County;
@@ -45,9 +46,12 @@ public class ChooseAreaFragment extends Fragment {
     //private AlertDialog progressDialog;
     private TextView titleText;
     private Button backButton;
+    private Button statusButton;
     private ListView listView;
     private ArrayAdapter<String> adapter;
     private List<String> dataList=new ArrayList<>();
+    //private SwipeRefreshLayout swipeRefreshLayout;
+    //public boolean status=false;
     //省列表
     private List<Province> provinceList;
     //市列表
@@ -67,6 +71,7 @@ public class ChooseAreaFragment extends Fragment {
         View view=inflater.inflate(R.layout.choose_area,container,false);
         titleText=view.findViewById(R.id.title_text);
         backButton=view.findViewById(R.id.back_button);
+        statusButton=view.findViewById(R.id.status_button);
         listView=view.findViewById(R.id.list_view);
         adapter =new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,dataList);
         listView.setAdapter(adapter);
@@ -113,13 +118,31 @@ public class ChooseAreaFragment extends Fragment {
                 }
             }
         });
+        statusButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                refresh();
+               // Toast.makeText(getActivity(),"dianjile",Toast.LENGTH_SHORT).show();
+            }
+        });
         queryProvinces();
+    }
+
+    private void refresh() {
+        Intent intent = new Intent(getActivity(), MainActivity.class);
+        int status=1;
+        intent.putExtra("status", status);
+        startActivity(intent);
+
+        /*MainActivity t =new MainActivity();
+        t.refresh();*/
     }
 
     //查询全国所有的省，优先从数据库查询，如果没有查询到再去服务器上查询
     private void queryProvinces() {
         titleText.setText("中国");
         backButton.setVisibility(View.GONE);
+        statusButton.setVisibility(View.VISIBLE);
         //backButton.setText("刷新");
         provinceList = LitePal.findAll(Province.class);
         if(provinceList.size()>0){
@@ -140,6 +163,7 @@ public class ChooseAreaFragment extends Fragment {
     private void queryCities() {
         titleText.setText(selectedProvince.getProvinceName());
         backButton.setVisibility(View.VISIBLE);
+        statusButton.setVisibility(View.GONE);
         cityList=LitePal.where("provinceid = ?", String.valueOf(selectedProvince.getId())).find(City.class);
         if (cityList.size()>0){
             dataList.clear();
@@ -160,6 +184,7 @@ public class ChooseAreaFragment extends Fragment {
     private void queryCounties() {
         titleText.setText(selectedCity.getCityName());
         backButton.setVisibility(View.VISIBLE);
+        statusButton.setVisibility(View.GONE);
         countyList=LitePal.where("cityid = ?", String.valueOf(selectedCity.getId())).find(County.class);
         if(countyList.size()>0){
             dataList.clear();
@@ -214,6 +239,9 @@ public class ChooseAreaFragment extends Fragment {
                     @Override
                     public void run() {
                         closeProgressDialog();
+                        /*if (status){
+                            swipeRefreshLayout.setRefreshing(false);
+                        }*/
                         Toast.makeText(getContext(),"加载失败",Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -226,6 +254,9 @@ public class ChooseAreaFragment extends Fragment {
             progressDialog=new ProgressDialog(getActivity());
             progressDialog.setMessage("正在加载...");
             progressDialog.setCanceledOnTouchOutside(false);
+            /*if (status){
+                swipeRefreshLayout.setRefreshing(false);
+            }*/
         }
     }
 
@@ -235,7 +266,7 @@ public class ChooseAreaFragment extends Fragment {
         }
     }
 
-    private Handler handler=new Handler(){
+    /*private Handler handler=new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
@@ -244,5 +275,36 @@ public class ChooseAreaFragment extends Fragment {
                 handler.sendEmptyMessageDelayed(1,1000);
             }
         }
-    };
+    };*/
+    /*public void swipeRefreshLayout(){
+        View view=inflater.inflate(R.layout.choose_area,container,false);
+        listView=view.findViewById(R.id.list_view);
+        adapter =new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1,dataList);
+        listView.setAdapter(adapter);
+    }*/
+
+    /*public ChooseAreaFragment() {
+        this.currentLevel = currentLevel;
+        //swipeRefreshLayout=swipeRefreshLayout.findViewById(id);
+        //onCreateView();
+        //swipeRefreshLayout();
+        //queryProvinces();
+        //queryCities();
+        //queryCounties();
+    }*/
+    /*public void setStatus(){
+        ChooseAreaFragment t=new ChooseAreaFragment();
+        //t.onCreateView()
+    }
+
+    public ChooseAreaFragment() {
+        super();
+    }
+
+    public ChooseAreaFragment(int contentLayoutId, SwipeRefreshLayout swipeRefreshLayout) {
+        super(contentLayoutId);
+        this.swipeRefreshLayout = swipeRefreshLayout;
+        status=true;
+        setStatus();
+    }*/
 }
